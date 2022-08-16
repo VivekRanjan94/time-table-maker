@@ -25,3 +25,5 @@ yarn-error.log*
 /src/Data
 
 package-lock.json
+
+test.*

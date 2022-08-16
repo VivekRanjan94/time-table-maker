@@ -171,17 +171,17 @@ const App = () => {
             )
           })}
         </tbody>
+        <button
+          className='add-btn'
+          onClick={(e) => {
+            if (state.selectedSlotsIndex.length !== 0) {
+              dispatch({ TYPE: 'MODAL', payload: { value: true } })
+            }
+          }}
+        >
+          ADD
+        </button>
       </table>
-      <button
-        className='add-btn'
-        onClick={(e) => {
-          if (state.selectedSlotsIndex.length !== 0) {
-            dispatch({ TYPE: 'MODAL', payload: { value: true } })
-          }
-        }}
-      >
-        ADD
-      </button>
     </div>
   )
 }
