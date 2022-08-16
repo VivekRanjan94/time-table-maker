@@ -1,0 +1,26 @@
+.slot-container {
+  .slot {
+    text-transform: capitalize;
+    padding: 0.4rem;
+
+    &-name {
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+    &-code {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+    }
+    &-faculty {
+      font-size: 0.8rem;
+    }
+    &-location {
+      text-transform: uppercase;
+      font-size: 0.8rem;
+    }
+  }
+  &:hover {
+    background-color: #ccc;
+    cursor: pointer;
+  }
+}
