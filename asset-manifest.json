@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/time-table-maker/static/css/main.10d5bb64.css",
+    "main.js": "/time-table-maker/static/js/main.794e28e5.js",
+    "index.html": "/time-table-maker/index.html",
+    "main.10d5bb64.css.map": "/time-table-maker/static/css/main.10d5bb64.css.map",
+    "main.794e28e5.js.map": "/time-table-maker/static/js/main.794e28e5.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.10d5bb64.css",
+    "static/js/main.794e28e5.js"
+  ]
+}
