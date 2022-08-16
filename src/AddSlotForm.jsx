@@ -13,7 +13,7 @@ const AddSlotForm = ({ dispatch }) => {
   }
 
   return (
-    <form>
+    <form className='add-slot-form'>
       <div className='group'>
         <label htmlFor='name'>Name</label>
         <input

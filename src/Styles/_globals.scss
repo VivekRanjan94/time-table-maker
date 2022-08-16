@@ -21,7 +21,7 @@ body {
 header {
   font-size: 3.5rem;
   text-align: center;
-  // color: #4287f5;
+  // color: #4287f5 ;
 }
 
 .add-btn {
@@ -29,7 +29,10 @@ header {
   background: none;
   border: 1px solid black;
   border-radius: 5px;
-  padding: 0.5rem 1rem;
+  padding: 0.3rem 1rem;
+
+  // font-weight: bold;
+  font-size: 1.2rem;
 
   &:hover {
     background-color: #ccc;

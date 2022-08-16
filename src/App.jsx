@@ -3,7 +3,6 @@ import React, { useReducer } from 'react'
 import Modal from './Modal'
 import Slot from './Slot'
 import AddSlotForm from './AddSlotForm'
-import { ReactComponent as DownloadIcon } from './Assets/download.svg'
 
 import './Styles/styles.scss'
 
