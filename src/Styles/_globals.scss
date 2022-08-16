@@ -24,17 +24,37 @@ header {
   // color: #4287f5 ;
 }
 
-.add-btn {
-  cursor: pointer;
-  background: none;
-  border: 1px solid black;
-  border-radius: 5px;
-  padding: 0.3rem 1rem;
+.buttons {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
 
-  // font-weight: bold;
-  font-size: 1.2rem;
+  .add-btn {
+    cursor: pointer;
+    background: none;
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 0.3rem 1rem;
 
-  &:hover {
-    background-color: #ccc;
+    // font-weight: bold;
+    font-size: 1.2rem;
+
+    &:hover {
+      background-color: #ccc;
+    }
+  }
+  .download-btn {
+    cursor: pointer;
+    background: none;
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 0.3rem 1rem;
+
+    // font-weight: bold;
+    font-size: 1.2rem;
+
+    &:hover {
+      background-color: #ccc;
+    }
   }
 }

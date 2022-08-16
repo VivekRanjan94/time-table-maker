@@ -1,4 +1,5 @@
-import React, { useReducer } from 'react'
+import React, { useReducer, useRef } from 'react'
+import { exportComponentAsJPEG } from 'react-component-export-image'
 
 import Modal from './Modal'
 import Slot from './Slot'
@@ -52,6 +53,7 @@ const generate_slots = () => {
 const INITIAL_SLOTS = generate_slots()
 
 const App = () => {
+  const tableRef = useRef()
   const reducer = (state, action) => {
     switch (action.TYPE) {
       case 'ADD': {
@@ -138,7 +140,7 @@ const App = () => {
         <AddSlotForm dispatch={dispatch} />
       </Modal>
       <header>Time Table</header>
-      <table>
+      <table ref={tableRef}>
         <thead>
           <tr>
             <th></th>
@@ -171,6 +173,8 @@ const App = () => {
             )
           })}
         </tbody>
+      </table>
+      <div className='buttons'>
         <button
           className='add-btn'
           onClick={(e) => {
@@ -181,7 +185,15 @@ const App = () => {
         >
           ADD
         </button>
-      </table>
+        <button
+          className='download-btn'
+          onClick={() => {
+            exportComponentAsJPEG(tableRef)
+          }}
+        >
+          Download
+        </button>
+      </div>
     </div>
   )
 }
