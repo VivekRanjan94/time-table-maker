@@ -43,6 +43,20 @@ header {
       background-color: #ccc;
     }
   }
+  .clear-btn {
+    cursor: pointer;
+    background: none;
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 0.3rem 1rem;
+
+    // font-weight: bold;
+    font-size: 1.2rem;
+
+    &:hover {
+      background-color: #ccc;
+    }
+  }
   .download-btn {
     cursor: pointer;
     background: none;

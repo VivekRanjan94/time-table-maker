@@ -53,6 +53,7 @@ const generate_slots = () => {
 const INITIAL_SLOTS = generate_slots()
 
 const App = () => {
+  console.log(JSON.parse(localStorage.getItem('slots')))
   const tableRef = useRef()
   const reducer = (state, action) => {
     switch (action.TYPE) {
@@ -118,6 +119,25 @@ const App = () => {
       }
       case 'MODAL': {
         return { ...state, showModal: action.payload.value }
+      }
+      case 'CLEAR': {
+        const newSlots = {...state.slots} 
+
+        state.selectedSlotsIndex.forEach(({ day, time }) => {
+          newSlots[day][time] = {
+            ...newSlots[day][time],
+            name: '',
+            faculty: '',
+            location: '',
+            code: '',
+            highlighted: false,
+            filled: false,
+          }
+        })
+
+        localStorage.setItem('slots', JSON.stringify(newSlots))
+
+        return {...state, slots: {...newSlots}}
       }
       default: {
         console.log('default case')
@@ -187,6 +207,16 @@ const App = () => {
           }}
         >
           CHANGE
+        </button>
+        <button
+          className='clear-btn'
+          onClick={(e) => {
+            if (state.selectedSlotsIndex.length !== 0) {
+              dispatch({ TYPE: 'CLEAR'})
+            }
+          }}
+        >
+          CLEAR
         </button>
         <button
           className='download-btn'
