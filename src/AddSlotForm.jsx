@@ -1,11 +1,11 @@
 import React from 'react'
 import { useState } from 'react'
 
-const AddSlotForm = ({ dispatch }) => {
-  const [name, setName] = useState('')
-  const [faculty, setFaculty] = useState('')
-  const [location, setLocation] = useState('')
-  const [code, setCode] = useState('')
+const AddSlotForm = ({ dispatch, name: n, faculty: f, location: l, code: c }) => {
+  const [name, setName] = useState(n)
+  const [faculty, setFaculty] = useState(f)
+  const [location, setLocation] = useState(l)
+  const [code, setCode] = useState(c)
 
   const submit = (e) => {
     e.preventDefault()
@@ -66,7 +66,7 @@ const AddSlotForm = ({ dispatch }) => {
           }}
         />
       </div>
-      <button onClick={submit}>Add</button>
+      <button onClick={submit}>Change</button>
     </form>
   )
 }

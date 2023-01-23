@@ -93,8 +93,9 @@ const App = () => {
           ],
         }
       }
-      case 'SET-SLOTS': {
+      case 'SET-SLOTS': {        
         const newSlots = { ...state.slots }
+
         state.selectedSlotsIndex.forEach(({ day, time }) => {
           newSlots[day][time] = {
             ...newSlots[day][time],
@@ -137,7 +138,7 @@ const App = () => {
         }}
         allowClose={true}
       >
-        <AddSlotForm dispatch={dispatch} />
+        <AddSlotForm dispatch={dispatch} name={state.selectedSlotsIndex.length === 0 ? '' : state.slots[state.selectedSlotsIndex[0].day][state.selectedSlotsIndex[0].time].name} code={state.selectedSlotsIndex.length === 0 ? '' : state.slots[state.selectedSlotsIndex[0].day][state.selectedSlotsIndex[0].time].code} location={state.selectedSlotsIndex.length === 0 ? '' : state.slots[state.selectedSlotsIndex[0].day][state.selectedSlotsIndex[0].time].location} faculty={state.selectedSlotsIndex.length === 0 ? '' : state.slots[state.selectedSlotsIndex[0].day][state.selectedSlotsIndex[0].time].faculty} />
       </Modal>
       <header>Time Table</header>
       <table ref={tableRef}>
@@ -176,14 +177,14 @@ const App = () => {
       </table>
       <div className='buttons'>
         <button
-          className='add-btn'
+          className='change-btn'
           onClick={(e) => {
             if (state.selectedSlotsIndex.length !== 0) {
               dispatch({ TYPE: 'MODAL', payload: { value: true } })
             }
           }}
         >
-          ADD
+          CHANGE
         </button>
         <button
           className='download-btn'
