@@ -108,6 +108,8 @@ const App = () => {
           }
         })
 
+        localStorage.setItem('slots', JSON.stringify(newSlots))
+
         return {
           slots: { ...newSlots },
           showModal: false,
@@ -125,7 +127,7 @@ const App = () => {
   }
   const [state, dispatch] = useReducer(reducer, {
     selectedSlotsIndex: [],
-    slots: INITIAL_SLOTS,
+    slots: JSON.parse(localStorage.getItem('slots')) || INITIAL_SLOTS,
     showModal: false,
   })
 
