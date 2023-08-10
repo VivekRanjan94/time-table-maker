@@ -94,7 +94,7 @@ const App = () => {
           ],
         }
       }
-      case 'SET-SLOTS': {        
+      case 'SET-SLOTS': {
         const newSlots = { ...state.slots }
 
         state.selectedSlotsIndex.forEach(({ day, time }) => {
@@ -121,7 +121,7 @@ const App = () => {
         return { ...state, showModal: action.payload.value }
       }
       case 'CLEAR': {
-        const newSlots = {...state.slots} 
+        const newSlots = { ...state.slots }
 
         state.selectedSlotsIndex.forEach(({ day, time }) => {
           newSlots[day][time] = {
@@ -137,7 +137,7 @@ const App = () => {
 
         localStorage.setItem('slots', JSON.stringify(newSlots))
 
-        return {...state, slots: {...newSlots}}
+        return { ...state, slots: { ...newSlots }, selectedSlotsIndex: [] }
       }
       default: {
         console.log('default case')
@@ -160,7 +160,37 @@ const App = () => {
         }}
         allowClose={true}
       >
-        <AddSlotForm dispatch={dispatch} name={state.selectedSlotsIndex.length === 0 ? '' : state.slots[state.selectedSlotsIndex[0].day][state.selectedSlotsIndex[0].time].name} code={state.selectedSlotsIndex.length === 0 ? '' : state.slots[state.selectedSlotsIndex[0].day][state.selectedSlotsIndex[0].time].code} location={state.selectedSlotsIndex.length === 0 ? '' : state.slots[state.selectedSlotsIndex[0].day][state.selectedSlotsIndex[0].time].location} faculty={state.selectedSlotsIndex.length === 0 ? '' : state.slots[state.selectedSlotsIndex[0].day][state.selectedSlotsIndex[0].time].faculty} />
+        <AddSlotForm
+          dispatch={dispatch}
+          name={
+            state.selectedSlotsIndex.length === 0
+              ? ''
+              : state.slots[state.selectedSlotsIndex[0].day][
+                  state.selectedSlotsIndex[0].time
+                ].name
+          }
+          code={
+            state.selectedSlotsIndex.length === 0
+              ? ''
+              : state.slots[state.selectedSlotsIndex[0].day][
+                  state.selectedSlotsIndex[0].time
+                ].code
+          }
+          location={
+            state.selectedSlotsIndex.length === 0
+              ? ''
+              : state.slots[state.selectedSlotsIndex[0].day][
+                  state.selectedSlotsIndex[0].time
+                ].location
+          }
+          faculty={
+            state.selectedSlotsIndex.length === 0
+              ? ''
+              : state.slots[state.selectedSlotsIndex[0].day][
+                  state.selectedSlotsIndex[0].time
+                ].faculty
+          }
+        />
       </Modal>
       <header>Time Table</header>
       <table ref={tableRef}>
@@ -212,7 +242,7 @@ const App = () => {
           className='clear-btn'
           onClick={(e) => {
             if (state.selectedSlotsIndex.length !== 0) {
-              dispatch({ TYPE: 'CLEAR'})
+              dispatch({ TYPE: 'CLEAR' })
             }
           }}
         >
