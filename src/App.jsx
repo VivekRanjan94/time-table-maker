@@ -60,13 +60,31 @@ const App = () => {
     switch (action.TYPE) {
       case 'SELECT': {
         const newSlots = { ...state.slots }
-
-        newSlots[action.payload.dayIdx][action.payload.timeIdx].highlighted =
-          !state.selectedSlotsIndex.some(
+        if (
+          state.selectedSlotsIndex.some(
             (s) =>
               s.day === action.payload.dayIdx &&
               s.time === action.payload.timeIdx
           )
+        ) {
+          newSlots[action.payload.dayIdx][
+            action.payload.timeIdx
+          ].highlighted = false
+          return {
+            ...state,
+            slots: newSlots,
+            selectedSlotsIndex: state.selectedSlotsIndex.filter((s) => {
+              return !(
+                s.day === action.payload.dayIdx &&
+                s.time === action.payload.timeIdx
+              )
+            }),
+          }
+        }
+
+        newSlots[action.payload.dayIdx][
+          action.payload.timeIdx
+        ].highlighted = true
 
         return {
           ...state,
@@ -99,15 +117,20 @@ const App = () => {
         return { ...state, showModal: !state.showModal }
       }
       case 'CLEAR': {
-        const newSlots = generate_slots()
+        const newSlots = { ...state.slots }
+
+        state.selectedSlotsIndex.forEach(({ day, time }) => {
+          newSlots[day][time] = {
+            ...newSlots[day][time],
+            subjectId: '',
+            highlighted: false,
+            filled: false,
+          }
+        })
 
         localStorage.setItem('slots', JSON.stringify(newSlots))
 
-        return {
-          ...state,
-          slots: newSlots,
-          selectedSlotsIndex: [],
-        }
+        return { ...state, slots: { ...newSlots } }
       }
       case 'ADD-SUBJECT': {
         const newSubjects = {
