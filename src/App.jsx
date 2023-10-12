@@ -106,7 +106,7 @@ const App = () => {
             filled: true,
           }
         })
-        localStorage.setItem('slots', JSON.stringify(newSlots))
+        localStorage.setItem('slots-2', JSON.stringify(newSlots))
         return {
           ...state,
           slots: { ...newSlots },
@@ -128,7 +128,7 @@ const App = () => {
           }
         })
 
-        localStorage.setItem('slots', JSON.stringify(newSlots))
+        localStorage.setItem('slots-2', JSON.stringify(newSlots))
 
         return { ...state, slots: { ...newSlots } }
       }
@@ -137,7 +137,7 @@ const App = () => {
           ...state.subjects,
           [uuid()]: action.payload.subject,
         }
-        localStorage.setItem('subjects', JSON.stringify(newSubjects))
+        localStorage.setItem('subjects-2', JSON.stringify(newSubjects))
         return {
           ...state,
           subjects: newSubjects,
@@ -156,7 +156,7 @@ const App = () => {
           ...state.subjects,
           [action.payload.subjectId]: action.payload.subject,
         }
-        localStorage.setItem('subjects', JSON.stringify(newSubjects))
+        localStorage.setItem('subjects-2', JSON.stringify(newSubjects))
 
         return {
           ...state,
@@ -183,8 +183,8 @@ const App = () => {
 
         delete state.subjects[id]
 
-        localStorage.setItem('slots', JSON.stringify(newSlots))
-        localStorage.setItem('subjects', JSON.stringify(state.subjects))
+        localStorage.setItem('slots-2', JSON.stringify(newSlots))
+        localStorage.setItem('subjects-2', JSON.stringify(state.subjects))
 
         return { ...state, slots: newSlots, showModal: false }
       }
@@ -196,9 +196,9 @@ const App = () => {
   }
   const [state, dispatch] = useReducer(reducer, {
     selectedSlotsIndex: [],
-    slots: JSON.parse(localStorage.getItem('slots')) || INITIAL_SLOTS,
+    slots: JSON.parse(localStorage.getItem('slots-2')) || INITIAL_SLOTS,
     showModal: false,
-    subjects: JSON.parse(localStorage.getItem('subjects')) || {},
+    subjects: JSON.parse(localStorage.getItem('subjects-2')) || {},
     selectedSubjectId: '',
   })
 
