@@ -1,4 +1,17 @@
 .slot-container {
+  position: relative;
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+  border-right: 1px solid black;
+
+  &:first-of-type {
+    border-left: 1px solid black;
+  }
+
+  &.long {
+    border-right: none;
+  }
+
   .slot {
     text-transform: capitalize;
     padding: 0.4rem;

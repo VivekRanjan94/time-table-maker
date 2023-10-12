@@ -202,6 +202,22 @@ const App = () => {
     selectedSubjectId: '',
   })
 
+  const getSize = (day, time) => {
+    if (time === -1) return -1
+    if (time === 9) return 1
+
+    const subject = state.slots[day][time].subjectId
+    if (subject === '') return 1
+
+    let s = 1
+    let t = time + 1
+    while (state.slots[day][t].subjectId === subject) {
+      t++
+      s++
+    }
+    return s
+  }
+
   return (
     <div className='app'>
       <Modal
@@ -254,6 +270,8 @@ const App = () => {
                           subject={
                             state.subjects[state.slots[day][timeIdx].subjectId]
                           }
+                          size={getSize(day, timeIdx)}
+                          prevSize={getSize(day, timeIdx - 1)}
                         />
                       )
                     })}
