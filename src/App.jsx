@@ -211,7 +211,7 @@ const App = () => {
 
     let s = 1
     let t = time + 1
-    while (state.slots[day][t].subjectId === subject) {
+    while (t < 9 && state.slots[day][t].subjectId === subject) {
       t++
       s++
     }
