@@ -24,6 +24,10 @@ header {
   // color: #4287f5 ;
 }
 
+.split {
+  display: flex;
+}
+
 .buttons {
   display: flex;
   align-items: center;
@@ -71,4 +75,12 @@ header {
       background-color: #ccc;
     }
   }
+}
+
+.icon:hover {
+  cursor: pointer;
+}
+
+.hide {
+  display: none;
 }

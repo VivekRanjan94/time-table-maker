@@ -1,19 +1,32 @@
 import React from 'react'
 import { useState } from 'react'
 
-const AddSlotForm = ({ dispatch, name: n, faculty: f, location: l, code: c }) => {
-  const [name, setName] = useState(n)
-  const [faculty, setFaculty] = useState(f)
-  const [location, setLocation] = useState(l)
-  const [code, setCode] = useState(c)
+const SubjectForm = ({ dispatch, subject, subjectId, isChange }) => {
+  const [name, setName] = useState(subject.name)
+  const [faculty, setFaculty] = useState(subject.faculty)
+  const [location, setLocation] = useState(subject.location)
+  const [code, setCode] = useState(subject.code)
 
   const submit = (e) => {
     e.preventDefault()
-    dispatch({ TYPE: 'SET-SLOTS', payload: { name, faculty, location, code } })
+    if (isChange) {
+      dispatch({
+        TYPE: 'CHANGE-SUBJECT',
+        payload: {
+          subjectId: subjectId,
+          subject: { name, faculty, location, code },
+        },
+      })
+    } else {
+      dispatch({
+        TYPE: 'ADD-SUBJECT',
+        payload: { subject: { name, faculty, location, code } },
+      })
+    }
   }
 
   return (
-    <form className='add-slot-form'>
+    <form className='subject-form'>
       <div className='group'>
         <label htmlFor='name'>Name</label>
         <input
@@ -66,9 +79,9 @@ const AddSlotForm = ({ dispatch, name: n, faculty: f, location: l, code: c }) =>
           }}
         />
       </div>
-      <button onClick={submit}>Change</button>
+      <button onClick={submit}>{isChange ? 'Change' : 'Add'}</button>
     </form>
   )
 }
 
-export default AddSlotForm
+export default SubjectForm

@@ -1,9 +1,13 @@
-import React, { useReducer, useRef } from 'react'
+import React, { useReducer, useRef, useState } from 'react'
 import { exportComponentAsJPEG } from 'react-component-export-image'
+import { v4 as uuid } from 'uuid'
 
 import Modal from './Modal'
 import Slot from './Slot'
-import AddSlotForm from './AddSlotForm'
+import SubjectForm from './SubjectForm'
+import { ReactComponent as DeleteIcon } from './Assets/delete.svg'
+import { ReactComponent as EditIcon } from './Assets/edit.svg'
+import { ReactComponent as AddIcon } from './Assets/add.svg'
 
 import './Styles/styles.scss'
 
@@ -21,7 +25,7 @@ const TIME_SLOTS = [
   { id: 'time-slot-10', start: 5, end: 6 },
 ]
 
-// const TEST_SLOT = {
+// const TEST_SUBJECT = {
 //   name: 'Theory of Computation',
 //   code: 'CO303',
 //   faculty: 'Anurag Goel',
@@ -36,13 +40,10 @@ const generate_slots = () => {
       return {
         ...time,
         id: `${day.toLowerCase()}-${time.id}`,
-        name: '',
-        code: '',
-        faculty: '',
-        location: '',
+        subjectId: '',
         filled: false,
         highlighted: false,
-        // ...TEST_SLOT,
+        // ...TEST_SUBJECT,
       }
     })
   })
@@ -53,37 +54,19 @@ const generate_slots = () => {
 const INITIAL_SLOTS = generate_slots()
 
 const App = () => {
-  console.log(JSON.parse(localStorage.getItem('slots')))
   const tableRef = useRef()
+  const [right, setRight] = useState(false)
   const reducer = (state, action) => {
     switch (action.TYPE) {
-      case 'ADD': {
+      case 'SELECT': {
         const newSlots = { ...state.slots }
-        if (
-          state.selectedSlotsIndex.some(
+
+        newSlots[action.payload.dayIdx][action.payload.timeIdx].highlighted =
+          !state.selectedSlotsIndex.some(
             (s) =>
               s.day === action.payload.dayIdx &&
               s.time === action.payload.timeIdx
           )
-        ) {
-          newSlots[action.payload.dayIdx][
-            action.payload.timeIdx
-          ].highlighted = false
-          return {
-            ...state,
-            slots: newSlots,
-            selectedSlotsIndex: state.selectedSlotsIndex.filter((s) => {
-              return !(
-                s.day === action.payload.dayIdx &&
-                s.time === action.payload.timeIdx
-              )
-            }),
-          }
-        }
-
-        newSlots[action.payload.dayIdx][
-          action.payload.timeIdx
-        ].highlighted = true
 
         return {
           ...state,
@@ -94,53 +77,96 @@ const App = () => {
           ],
         }
       }
-      case 'SET-SLOTS': {
+      case 'SET': {
         const newSlots = { ...state.slots }
 
         state.selectedSlotsIndex.forEach(({ day, time }) => {
           newSlots[day][time] = {
-            ...newSlots[day][time],
-            name: action.payload.name,
-            faculty: action.payload.faculty,
-            location: action.payload.location,
-            code: action.payload.code,
+            id: newSlots[day][time].id,
+            subjectId: action.payload.subjectId,
             highlighted: false,
             filled: true,
           }
         })
-
         localStorage.setItem('slots', JSON.stringify(newSlots))
-
         return {
+          ...state,
           slots: { ...newSlots },
-          showModal: false,
           selectedSlotsIndex: [],
         }
       }
       case 'MODAL': {
-        return { ...state, showModal: action.payload.value }
+        return { ...state, showModal: !state.showModal }
       }
       case 'CLEAR': {
-        const newSlots = { ...state.slots }
-
-        state.selectedSlotsIndex.forEach(({ day, time }) => {
-          newSlots[day][time] = {
-            ...newSlots[day][time],
-            name: '',
-            faculty: '',
-            location: '',
-            code: '',
-            highlighted: false,
-            filled: false,
-          }
-        })
+        const newSlots = generate_slots()
 
         localStorage.setItem('slots', JSON.stringify(newSlots))
 
-        return { ...state, slots: { ...newSlots }, selectedSlotsIndex: [] }
+        return {
+          ...state,
+          slots: newSlots,
+          selectedSlotsIndex: [],
+        }
+      }
+      case 'ADD-SUBJECT': {
+        const newSubjects = {
+          ...state.subjects,
+          [uuid()]: action.payload.subject,
+        }
+        localStorage.setItem('subjects', JSON.stringify(newSubjects))
+        return {
+          ...state,
+          subjects: newSubjects,
+          showModal: false,
+        }
+      }
+      case 'EDIT-SUBJECT': {
+        return {
+          ...state,
+          selectedSubjectId: action.payload.subjectId,
+          showModal: true,
+        }
+      }
+      case 'CHANGE-SUBJECT': {
+        const newSubjects = {
+          ...state.subjects,
+          [action.payload.subjectId]: action.payload.subject,
+        }
+        localStorage.setItem('subjects', JSON.stringify(newSubjects))
+
+        return {
+          ...state,
+          subjects: newSubjects,
+          selectedSubjectId: '',
+          showModal: false,
+        }
+      }
+      case 'DELETE-SUBJECT': {
+        const id = action.payload.subjectId
+        const newSlots = { ...state.slots }
+
+        DAYS_OF_WEEK.forEach((day) => {
+          TIME_SLOTS.forEach((t, timeIdx) => {
+            if (newSlots[day][timeIdx].subjectId === id) {
+              newSlots[day][timeIdx] = {
+                ...newSlots[day][timeIdx],
+                filled: false,
+                subjectId: '',
+              }
+            }
+          })
+        })
+
+        delete state.subjects[id]
+
+        localStorage.setItem('slots', JSON.stringify(newSlots))
+        localStorage.setItem('subjects', JSON.stringify(state.subjects))
+
+        return { ...state, slots: newSlots, showModal: false }
       }
       default: {
-        console.log('default case')
+        console.log(`Default case: ${action.TYPE}`)
         return { ...state }
       }
     }
@@ -149,6 +175,8 @@ const App = () => {
     selectedSlotsIndex: [],
     slots: JSON.parse(localStorage.getItem('slots')) || INITIAL_SLOTS,
     showModal: false,
+    subjects: JSON.parse(localStorage.getItem('subjects')) || {},
+    selectedSubjectId: '',
   })
 
   return (
@@ -160,102 +188,144 @@ const App = () => {
         }}
         allowClose={true}
       >
-        <AddSlotForm
+        <SubjectForm
           dispatch={dispatch}
-          name={
-            state.selectedSlotsIndex.length === 0
-              ? ''
-              : state.slots[state.selectedSlotsIndex[0].day][
-                  state.selectedSlotsIndex[0].time
-                ].name
+          subject={
+            state.selectedSubjectId === ''
+              ? { name: '', code: '', location: '', faculty: '' }
+              : state.subjects[state.selectedSubjectId]
           }
-          code={
-            state.selectedSlotsIndex.length === 0
-              ? ''
-              : state.slots[state.selectedSlotsIndex[0].day][
-                  state.selectedSlotsIndex[0].time
-                ].code
-          }
-          location={
-            state.selectedSlotsIndex.length === 0
-              ? ''
-              : state.slots[state.selectedSlotsIndex[0].day][
-                  state.selectedSlotsIndex[0].time
-                ].location
-          }
-          faculty={
-            state.selectedSlotsIndex.length === 0
-              ? ''
-              : state.slots[state.selectedSlotsIndex[0].day][
-                  state.selectedSlotsIndex[0].time
-                ].faculty
-          }
+          subjectId={state.selectedSubjectId}
+          isChange={state.selectedSubjectId !== ''}
         />
       </Modal>
       <header>Time Table</header>
-      <table ref={tableRef}>
-        <thead>
-          <tr>
-            <th></th>
-            {TIME_SLOTS.map((time) => {
-              return (
-                <th key={`slot-${time.id}`}>
-                  {time.start}-{time.end}
-                </th>
-              )
-            })}
-          </tr>
-        </thead>
-        <tbody>
-          {DAYS_OF_WEEK.map((day) => {
-            return (
-              <tr key={day}>
-                <th>{day.charAt(0).toUpperCase() + day.slice(1)}</th>
-                {TIME_SLOTS.map((time, timeIdx) => {
+      <div className='split'>
+        <div className='left'>
+          <table ref={tableRef}>
+            <thead>
+              <tr>
+                <th></th>
+                {TIME_SLOTS.map((time) => {
                   return (
-                    <Slot
-                      key={state.slots[day][timeIdx].id}
-                      dayIdx={day}
-                      timeIdx={timeIdx}
-                      slot={state.slots[day][timeIdx]}
-                      dispatch={dispatch}
-                    />
+                    <th key={`slot-${time.id}`}>
+                      {time.start}-{time.end}
+                    </th>
                   )
                 })}
               </tr>
-            )
-          })}
-        </tbody>
-      </table>
-      <div className='buttons'>
-        <button
-          className='change-btn'
-          onClick={(e) => {
-            if (state.selectedSlotsIndex.length !== 0) {
-              dispatch({ TYPE: 'MODAL', payload: { value: true } })
-            }
-          }}
-        >
-          CHANGE
-        </button>
-        <button
-          className='clear-btn'
-          onClick={(e) => {
-            if (state.selectedSlotsIndex.length !== 0) {
-              dispatch({ TYPE: 'CLEAR' })
-            }
-          }}
-        >
-          CLEAR
-        </button>
-        <button
-          className='download-btn'
-          onClick={() => {
-            exportComponentAsJPEG(tableRef)
-          }}
-        >
-          Download
-        </button>
+            </thead>
+            <tbody>
+              {DAYS_OF_WEEK.map((day) => {
+                return (
+                  <tr key={day}>
+                    <th>{day.charAt(0).toUpperCase() + day.slice(1)}</th>
+                    {TIME_SLOTS.map((time, timeIdx) => {
+                      return (
+                        <Slot
+                          key={state.slots[day][timeIdx].id}
+                          dayIdx={day}
+                          timeIdx={timeIdx}
+                          dispatch={dispatch}
+                          slot={state.slots[day][timeIdx]}
+                          subject={
+                            state.subjects[state.slots[day][timeIdx].subjectId]
+                          }
+                        />
+                      )
+                    })}
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table>
+          <div className='buttons'>
+            <button
+              className='change-btn'
+              onClick={(e) => {
+                if (state.selectedSlotsIndex.length !== 0) {
+                  setRight(true)
+                }
+              }}
+            >
+              CHANGE
+            </button>
+            <button
+              className='clear-btn'
+              onClick={(e) => {
+                dispatch({ TYPE: 'CLEAR' })
+              }}
+            >
+              CLEAR
+            </button>
+            <button
+              className='download-btn'
+              onClick={() => {
+                exportComponentAsJPEG(tableRef)
+              }}
+            >
+              Download
+            </button>
+          </div>
+        </div>
+
+        <div className={`right${right ? '' : ' hide'}`}>
+          <div className='header'>
+            <h3>Subjects</h3>
+            <span
+              className={`cross`}
+              onClick={() => {
+                setRight(false)
+              }}
+            ></span>
+          </div>
+          <ul>
+            {Object.entries(state.subjects).map(([subjectId, s]) => {
+              return (
+                <li key={`subject-${subjectId}`} className='subject'>
+                  <div
+                    className='subject-description'
+                    onClick={() => {
+                      dispatch({ TYPE: 'SET', payload: { subjectId } })
+                      setRight(false)
+                    }}
+                  >
+                    <div>Code: {s.code}</div>
+                    <div>Name: {s.name}</div>
+                    <div>Faculty: {s.faculty}</div>
+                    <div>Location: {s.location}</div>
+                  </div>
+                  <div className='options'>
+                    <EditIcon
+                      className='icon'
+                      onClick={() => {
+                        dispatch({
+                          TYPE: 'EDIT-SUBJECT',
+                          payload: { subjectId: subjectId },
+                        })
+                      }}
+                    />
+                    <DeleteIcon
+                      className='icon'
+                      onClick={() => {
+                        dispatch({
+                          TYPE: 'DELETE-SUBJECT',
+                          payload: { subjectId: subjectId },
+                        })
+                      }}
+                    />
+                  </div>
+                </li>
+              )
+            })}
+          </ul>
+          <AddIcon
+            className='icon'
+            onClick={() => {
+              dispatch({ TYPE: 'MODAL' })
+            }}
+          />
+        </div>
       </div>
     </div>
   )
