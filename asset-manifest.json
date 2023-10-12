@@ -1,13 +1,16 @@
 {
   "files": {
-    "main.css": "/time-table-maker/static/css/main.0c02c8e8.css",
-    "main.js": "/time-table-maker/static/js/main.379349ba.js",
+    "main.css": "/time-table-maker/static/css/main.83953abe.css",
+    "main.js": "/time-table-maker/static/js/main.dec26a5a.js",
     "index.html": "/time-table-maker/index.html",
-    "main.0c02c8e8.css.map": "/time-table-maker/static/css/main.0c02c8e8.css.map",
-    "main.379349ba.js.map": "/time-table-maker/static/js/main.379349ba.js.map"
+    "static/media/delete.svg": "/time-table-maker/static/media/delete.642da2f9203fed7e99a03988591b154e.svg",
+    "static/media/edit.svg": "/time-table-maker/static/media/edit.9c8f3ce5c9c3fc99786185b64fd1858b.svg",
+    "static/media/add.svg": "/time-table-maker/static/media/add.3be0ea4ac64cead2bf9590910d375914.svg",
+    "main.83953abe.css.map": "/time-table-maker/static/css/main.83953abe.css.map",
+    "main.dec26a5a.js.map": "/time-table-maker/static/js/main.dec26a5a.js.map"
   },
   "entrypoints": [
-    "static/css/main.0c02c8e8.css",
-    "static/js/main.379349ba.js"
+    "static/css/main.83953abe.css",
+    "static/js/main.dec26a5a.js"
   ]
 }
