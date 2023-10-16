@@ -130,7 +130,7 @@ const App = () => {
 
         localStorage.setItem('slots-2', JSON.stringify(newSlots))
 
-        return { ...state, slots: { ...newSlots } }
+        return { ...state, slots: { ...newSlots }, selectedSlotsIndex: [] }
       }
       case 'ADD-SUBJECT': {
         const newSubjects = {
